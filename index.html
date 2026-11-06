@@ -307,12 +307,6 @@
     pointer-events: none;
   }
 
-  select:focus-visible,
-  input[type="text"]:focus-visible {
-    outline: 3px solid rgba(235, 203, 139, 0.8);
-    outline-offset: 2px;
-  }
-
   #scn {
     min-height: 52px;
     font-size: 16px;
@@ -853,13 +847,17 @@
     min-height: 52px;
   }
 
-  .budget-box span {
+  .budget-box .money-prefix {
+    flex: none;
     color: var(--mute);
     font-weight: 700;
     font-size: 18px;
+    line-height: 1;
+    margin-right: 2px;
   }
 
   .budget-box input {
+    flex: 1;
     width: 100%;
     border: 0;
     background: transparent;
@@ -869,6 +867,10 @@
     font-weight: 700;
     padding: 12px 0;
     outline: none;
+    text-align: left;
+    direction: ltr;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
   }
 </style>
 </head>
@@ -967,8 +969,8 @@
   <p class="note" style="margin-top: -6px; margin-bottom: 16px;">Disclaimer: this is an AI-generated recommendation, not a final decision-maker. Treat it as a starting point for planning and validation, not a solution to adopt without review.</p>
   <div class="card">
     <label for="bud">Monthly budget</label>
-    <div class="budget-box"><span>$</span><input type="text" id="bud" inputmode="numeric" value="5000" aria-label="Monthly budget in dollars"></div>
-    <div style="margin-top: 10px; color: var(--mute); font-size: 14px">Projected spend: <b id="bv">$5,000</b></div>
+    <div class="budget-box"><span class="money-prefix">$</span><input type="text" id="bud" inputmode="numeric" value="00,000.00" aria-label="Monthly budget in dollars"></div>
+    <div style="margin-top: 10px; color: var(--mute); font-size: 14px">Projected spend: <b id="bv">$0</b></div>
   </div>
   <div class="card" id="plan"></div>
   <div class="btns"><button class="btn" id="exp">Export report</button><button class="btn alt" data-go="0">Start a new analysis</button></div>
@@ -1094,7 +1096,7 @@ var SENTIMENT_BANK=[
   {phrase:"helps me stay on track",focus:"Match the routine",detail:"Position the app as a lifestyle aid that fits study sessions without feeling heavy-handed."}
 ]
 ];
-var cur=0,sel=0,timer=null,W=40,B=5000,running=false;
+var cur=0,sel=0,timer=null,W=40,B=5000,running=false,budgetDigits="0";
 
 function shuffle(arr){
   var copy=arr.slice();
@@ -1221,11 +1223,18 @@ function renderDetail(){
   requestAnimationFrame(function(){fl.style.width=score(s)+"%"});
   grow($("ages"));
 }
+function formatBudgetText(raw){
+  var digits=String(raw||"").replace(/\D/g,"");
+  if(!digits){return "00,000.00";}
+  var padded=digits.padStart(3, "0");
+  var whole = (padded.slice(0, -2) || "0").padStart(5, "0");
+  var cents = padded.slice(-2);
+  return whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "." + cents;
+}
 function parseBudget(raw){
-  var digits=String(raw).replace(/[^\d]/g,"");
-  if(!digits){return 1000;}
-  var n=Number(digits);
-  return Math.min(20000,Math.max(1000,n));
+  var digits=String(raw||"").replace(/\D/g,"");
+  if(!digits){return 0;}
+  return Number(digits)/100;
 }
 function renderPlan(){
   var top=ranked().slice(0,3),tot=top.reduce(function(a,r){return a+r.sc},0);
@@ -1233,11 +1242,25 @@ function renderPlan(){
   $("plan").innerHTML=top.map(function(r){var amt=Math.round(B*r.sc/tot/50)*50,imp=Math.round(amt/r.s.cpm*1000);
     return '<div class="src"><b>'+r.s.n+'</b><span>'+imp.toLocaleString()+' views</span><b style="flex:none">$'+amt.toLocaleString()+'</b></div>'}).join("");
 }
-$("bud").oninput=function(){
-  B=parseBudget(this.value);
-  this.value=B.toLocaleString();
-  $("bv").textContent="$"+B.toLocaleString();
-  renderPlan();
+$("bud").onkeydown=function(e){
+  if(e.key>="0"&&e.key<="9"){
+    e.preventDefault();
+    budgetDigits = (budgetDigits === "0" ? "" : budgetDigits) + e.key;
+    if(budgetDigits.length > 8) budgetDigits = budgetDigits.slice(-8);
+    this.value = formatBudgetText(budgetDigits);
+    B = parseBudget(this.value);
+    $("bv").textContent="$"+B.toLocaleString();
+    renderPlan();
+    return;
+  }
+  if(e.key === "Backspace"){
+    e.preventDefault();
+    budgetDigits = budgetDigits.length > 1 ? budgetDigits.slice(0, -1) : "0";
+    this.value = formatBudgetText(budgetDigits);
+    B = parseBudget(this.value);
+    $("bv").textContent="$"+B.toLocaleString();
+    renderPlan();
+  }
 };
 function toast(m){var t=$("toast");t.textContent=m;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},2400)}
 function buildReport(){
