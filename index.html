@@ -276,19 +276,47 @@
   input[type="text"],
   select {
     width: 100%;
-    padding: 11px 12px;
+    min-height: 52px;
+    padding: 11px 40px 11px 12px;
     border: 1px solid var(--line);
     border-radius: 8px;
-    background: var(--bg);
+    background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.02)), var(--bg);
     color: var(--ink);
     font: inherit;
+    font-size: 16px;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+  }
+
+  .select-wrap {
+    position: relative;
+  }
+
+  .select-wrap::after {
+    content: "";
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    width: 0;
+    height: 0;
+    margin-top: -2px;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid var(--mute);
+    pointer-events: none;
+  }
+
+  select:focus-visible,
+  input[type="text"]:focus-visible {
+    outline: 3px solid rgba(235, 203, 139, 0.8);
+    outline-offset: 2px;
   }
 
   #scn {
     min-height: 52px;
     font-size: 16px;
-    padding: 13px 14px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.02)), var(--bg);
+    padding: 13px 40px 13px 14px;
   }
 
   input[type="range"] {
@@ -862,7 +890,7 @@
   <h1>Where should this product advertise?</h1>
   <p class="sub">Pick a sample scenario. Resonate fills in the product and audience details, then reads public conversations and audience data to find where people are most likely to respond well.</p>
   <div class="card">
-    <div class="field"><label for="scn">Scenario</label><select id="scn"></select></div>
+    <div class="field"><label for="scn">Scenario</label><div class="select-wrap"><select id="scn"></select></div></div>
     <p class="hint">The fields below are filled in by the scenario and can’t be edited.</p>
     <div class="grid">
       <div class="field"><label for="pname">Product name</label><input type="text" id="pname" class="lock" readonly></div>
@@ -1037,14 +1065,34 @@ var FIX=[
 [["Cut down on notifications","Notifications score 29% positive. Add quiet hours and let students choose which reminders they get.",1],["Make free vs. paid clearer","Price sits at 47%. Show exactly what is free, what is paid, and add a student discount.",0],["Share study results","Study results are at 69%. Show average grade gains to turn good experiences into proof.",0]]
 ];
 var SENTIMENT_BANK=[
-[[{phrase:"fits in my pack",focus:"Own the portability story",detail:"Frame the carry case and compact footprint as the main reason buyers choose it on trips."},{phrase:"worth the price",focus:"Cut the objection on cost",detail:"Use a bundle or starter kit in ads so the purchase feels easier to justify."},{phrase:"cleanup is annoying",focus:"Fix the weak point early",detail:"Show a rinse-free filter or quick-clean cup as a visible product win in the first 5 seconds."},{phrase:"great gift",focus:"Tap gift and impulse intent",detail:"Position the product as an easy premium gift for outdoorsy friends or new campers."},{phrase:"reliable in the backcountry",focus:"Translate user trust into payoff",detail:"Highlight a durable build and real-world test footage to turn trust into conversions."}],
-[{phrase:"battery lasts all week",focus:"Lead with the headline value",detail:"Use the week-long battery promise as the hero claim in top-of-funnel creative."},{phrase:"got me walking more",focus:"Make the habit payoff visible",detail:"Show the daily step streak and movement improvement in a relatable, health-focused story."},{phrase:"app is clunky",focus:"Simplify the user journey",detail:"Promote cleaner onboarding and a more obvious home screen to reduce the friction people complain about."},{phrase:"strap irritates my wrist",focus:"Offer a comfort upgrade",detail:"Feature a softer strap and simple sizing guidance to reduce friction at checkout."},{phrase:"feels accurate enough",focus:"Back claims with proof",detail:"Surface benchmark comparisons and a confidence cue to reinforce the product’s credibility."}],
-[{phrase:"dinner in 20 minutes",focus:"Sell the time-saving win",detail:"Center the ad around the minutes saved and the family chaos avoided each evening."},{phrase:"my kids ate it",focus:"Lean into approval proof",detail:"Use real kid-reviewed meals, not just ingredient lists, to validate the product in the ad."},{phrase:"too much packaging",focus:"Solve the waste objection",detail:"Offer a refill or returnable packaging story to make the product feel more responsible."},{phrase:"pricey for four",focus:"Make the value easier to see",detail:"A smaller plan or family bundle makes the spend feel more intentional and manageable."},{phrase:"easy to prep",focus:"Show the convenience in motion",detail:"Put a short recipe-first story in the creative so parents quickly see the routine change."}],
-[{phrase:"saved my midterm",focus:"Lead with performance proof",detail:"Use grade gains or exam prep wins as the clearest trust signal for students."},{phrase:"better than flashcards",focus:"Show the difference in use",detail:"Highlight a faster review loop and better retention to move students past the generic study-app pitch."},{phrase:"too many reminders",focus:"Respect student focus",detail:"Offer quiet hours and customizable reminders to make the app feel less intrusive."},{phrase:"worth the subscription",focus:"Make the value obvious",detail:"Show what is included at each price point to reduce purchase hesitation."},{phrase:"helps me stay on track",focus:"Match the routine",detail:"Position the app as a lifestyle aid that fits study sessions without feeling heavy-handed."}]],
-[[{phrase:"fits in my pack",focus:"Lead with portability",detail:"Show the carry case and quick pack-out in the first frame to connect with active buyers."},{phrase:"worth the price",focus:"Use perceived value",detail:"Pair a price claim with a clarified bundle to improve the buying decision."},{phrase:"cleanup is annoying",focus:"Offer a friction fix",detail:"Highlight the one-step rinse or removable cup as a direct response to the pain point."},{phrase:"great gift",focus:"Make gifting feel easy",detail:"Position the product as a thoughtful outdoors gift that feels premium and practical."},{phrase:"durable enough for trail use",focus:"Build confidence",detail:"Use sturdier build cues and real-world proof to reassure buyers who are risk-averse."}],
-[{phrase:"battery lasts all week",focus:"Make the promise visible",detail:"Use a clear battery claim and a week-long activity shot to convey lasting value."},{phrase:"got me walking more",focus:"Sell the habit impact",detail:"Translate steps into a story about feeling more active during a busy workday."},{phrase:"app is clunky",focus:"Reduce the software pain",detail:"Stress a cleaner dashboard and one-tap metrics screen in campaign language."},{phrase:"strap irritates my wrist",focus:"Address comfort friction",detail:"Position a softer strap as a comfort-first upgrade that reduces buyer hesitation."},{phrase:"reads near my watch",focus:"Lead with accuracy proof",detail:"Use trusted comparison benchmarks to make the product feel more dependable."}],
-[{phrase:"dinner in 20 minutes",focus:"Sell the time crunch relief",detail:"Tell the story of a realistic weeknight rescue with quick prep and clean ingredients."},{phrase:"my kids ate it",focus:"Build trust with parents",detail:"Use family-safe, kid-approved meals to reduce the fear of making the wrong choice."},{phrase:"too much packaging",focus:"Tone down the waste concern",detail:"Reframe the product around recyclability and a refill-friendly approach for busy families."},{phrase:"pricey for four",focus:"Show a lower-commitment option",detail:"Introduce a smaller plan or two-person split in the ad so the spend feels flexible."},{phrase:"easy to plan around",focus:"Frame the routine win",detail:"Highlight convenience and a repeatable family meal rhythm, not just ingredients."}],
-[{phrase:"saved my midterm",focus:"Use social proof",detail:"Feature student success stories to make the product seem like a practical study assistant."},{phrase:"better than flashcards",focus:"Show the experience gap",detail:"Message the faster, more engaging study flow that feels more natural in real routines."},{phrase:"too many reminders",focus:"Reduce stress in the UX",detail:"Target quiet hours and a better balance of prompts to avoid annoying the user."},{phrase:"worth the subscription",focus:"Sell the value clearly",detail:"Show what students get without extra costs so the product feels more transparent."},{phrase:"helps me stay on track",focus:"Leverage habit momentum",detail:"Position it as a routine builder that can keep students on pace without feeling overwhelming."}]]
+[
+  {phrase:"fits in my pack",focus:"Own the portability story",detail:"Frame the carry case and compact footprint as the main reason buyers choose it on trips."},
+  {phrase:"worth the price",focus:"Cut the objection on cost",detail:"Use a bundle or starter kit in ads so the purchase feels easier to justify."},
+  {phrase:"cleanup is annoying",focus:"Fix the weak point early",detail:"Show a rinse-free filter or quick-clean cup as a visible product win in the first 5 seconds."},
+  {phrase:"great gift",focus:"Tap gift and impulse intent",detail:"Position the product as an easy premium gift for outdoorsy friends or new campers."},
+  {phrase:"reliable in the backcountry",focus:"Translate user trust into payoff",detail:"Highlight a durable build and real-world test footage to turn trust into conversions."}
+],
+[
+  {phrase:"battery lasts all week",focus:"Lead with the headline value",detail:"Use the week-long battery promise as the hero claim in top-of-funnel creative."},
+  {phrase:"got me walking more",focus:"Make the habit payoff visible",detail:"Show the daily step streak and movement improvement in a relatable, health-focused story."},
+  {phrase:"app is clunky",focus:"Simplify the user journey",detail:"Promote cleaner onboarding and a more obvious home screen to reduce the friction people complain about."},
+  {phrase:"strap irritates my wrist",focus:"Offer a comfort upgrade",detail:"Feature a softer strap and simple sizing guidance to reduce friction at checkout."},
+  {phrase:"feels accurate enough",focus:"Back claims with proof",detail:"Surface benchmark comparisons and a confidence cue to reinforce the product’s credibility."}
+],
+[
+  {phrase:"dinner in 20 minutes",focus:"Sell the time-saving win",detail:"Center the ad around the minutes saved and the family chaos avoided each evening."},
+  {phrase:"my kids ate it",focus:"Lean into approval proof",detail:"Use real kid-reviewed meals, not just ingredient lists, to validate the product in the ad."},
+  {phrase:"too much packaging",focus:"Solve the waste objection",detail:"Offer a refill or returnable packaging story to make the product feel more responsible."},
+  {phrase:"pricey for four",focus:"Make the value easier to see",detail:"A smaller plan or family bundle makes the spend feel more intentional and manageable."},
+  {phrase:"easy to prep",focus:"Show the convenience in motion",detail:"Put a short recipe-first story in the creative so parents quickly see the routine change."}
+],
+[
+  {phrase:"saved my midterm",focus:"Lead with performance proof",detail:"Use grade gains or exam prep wins as the clearest trust signal for students."},
+  {phrase:"better than flashcards",focus:"Show the difference in use",detail:"Highlight a faster review loop and better retention to move students past the generic study-app pitch."},
+  {phrase:"too many reminders",focus:"Respect student focus",detail:"Offer quiet hours and customizable reminders to make the app feel less intrusive."},
+  {phrase:"worth the subscription",focus:"Make the value obvious",detail:"Show what is included at each price point to reduce purchase hesitation."},
+  {phrase:"helps me stay on track",focus:"Match the routine",detail:"Position the app as a lifestyle aid that fits study sessions without feeling heavy-handed."}
+]
 ];
 var cur=0,sel=0,timer=null,W=40,B=5000,running=false;
 
@@ -1057,14 +1105,13 @@ function shuffle(arr){
   return copy;
 }
 function getRandomSentimentSet(index){
-  var pool = SENTIMENT_BANK[index] ? SENTIMENT_BANK[index].flat() : [];
-  if(!pool.length){
+  var bank = Array.isArray(SENTIMENT_BANK[index]) ? SENTIMENT_BANK[index] : [];
+  if(!bank.length){
     return {phrases:[], fixes:[]};
   }
-  var picks = shuffle(pool).slice(0,4);
   return {
-    phrases: picks.map(function(item){return item.phrase}),
-    fixes: picks.slice(0,3).map(function(item){return {headline:item.focus,detail:item.detail}})
+    phrases: bank.slice(0,4).map(function(item){return item.phrase}),
+    fixes: bank.slice(0,3).map(function(item){return {headline:item.focus,detail:item.detail}})
   };
 }
 var $=function(i){return document.getElementById(i)};
@@ -1112,7 +1159,8 @@ function startProg(){
 }
 function renderSent(){
   var p=sc.sent;
-  var sentState=getRandomSentimentSet(SCN.indexOf(sc));
+  var scenarioIndex = SCN.findIndex(function(item){return item && item.name === sc.name;});
+  var sentState=getRandomSentimentSet(Math.max(0, scenarioIndex));
   $("stack").innerHTML='<div style="width:0;background:var(--pos)" data-w="'+p[0]+'%">'+p[0]+'% positive</div><div style="width:0;background:var(--neu)" data-w="'+p[1]+'%">'+p[1]+'%</div><div style="width:0;background:var(--neg)" data-w="'+p[2]+'%">'+p[2]+'%</div>';
   $("cnt")._cur=0;tween($("cnt"),liveTotal||sc.cnt,1200,function(v){return Math.round(v).toLocaleString()});
   $("fixes").innerHTML=sentState.fixes.map(function(f){return '<div class="fix"><div class="ic">'+ico("bulb")+'</div><div><b>'+f.headline+'<span class="tg md">Priority</span></b><p>'+f.detail+'</p></div></div>'}).join("");
