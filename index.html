@@ -194,9 +194,10 @@
   }
 
   .stepbar {
-    height: 5px;
+    height: 7px;
     margin: 0 -20px;
-    background-color: #8fbcbb;
+    background: linear-gradient(90deg, #8fbcbb 0%, #88c0d0 25%, #b48ead 52%, #ebcb8b 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.28), 0 0 0 1px rgba(46,52,64,0.08);
     transition: background-color 0.5s ease;
   }
 
@@ -281,6 +282,13 @@
     background: var(--bg);
     color: var(--ink);
     font: inherit;
+  }
+
+  #scn {
+    min-height: 52px;
+    font-size: 16px;
+    padding: 13px 14px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.02)), var(--bg);
   }
 
   input[type="range"] {
@@ -793,6 +801,47 @@
   .btn.alt {
     color: var(--ink);
   }
+
+  .detail-bullets {
+    margin: 12px 0 16px;
+    padding-left: 18px;
+    color: var(--ink);
+  }
+
+  .detail-bullets li {
+    margin: 8px 0;
+    line-height: 1.55;
+    color: var(--mute);
+  }
+
+  .budget-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg);
+    padding: 0 12px;
+    min-height: 52px;
+  }
+
+  .budget-box span {
+    color: var(--mute);
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  .budget-box input {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 12px 0;
+    outline: none;
+  }
 </style>
 </head>
 <body>
@@ -848,6 +897,7 @@
     <h2>Overall sentiment</h2>
     <div class="stack" id="stack"></div>
     <div style="color:var(--mute);font-size:14px">Positive, neutral, negative</div>
+    <p class="note" style="margin-top: 12px; margin-bottom: 0;">Disclaimer: this sentiment analysis is an AI-assisted recommendation layer, and sensitive or identifying information was filtered out of the public data stream and excluded from the model’s interpretation.</p>
   </div>
   <div class="card">
     <h2>What drives the opinion</h2>
@@ -878,7 +928,7 @@
       <div class="mini" style="margin-top:14px" id="dm"></div><div class="meter"><i id="dfill"></i></div></div>
     <div class="card"><h2>Audience by age</h2><div id="ages"></div></div>
   </div>
-  <div class="card"><h2>Why it ranked here</h2><p id="why" style="margin:0 0 12px"></p><h2>Suggested ad style</h2><p id="sty" style="margin:0"></p></div>
+  <div class="card"><h2>Why it ranked here</h2><p id="why" style="margin:0 0 12px"></p><ul class="detail-bullets" id="detailBullets"></ul><h2>Suggested ad style</h2><p id="sty" style="margin:0"></p></div>
   <div class="btns"><button class="btn alt" data-go="3">Back to rankings</button><button class="btn" data-go="5">Build campaign plan</button></div>
   
 </section>
@@ -886,7 +936,12 @@
 <section class="screen" id="s5">
   <h1>Campaign plan</h1>
   <p class="sub">A budget split across your three best-scoring sites.</p>
-  <div class="card"><label for="bud">Monthly budget: <b id="bv">$5,000</b></label><input type="range" id="bud" min="1000" max="20000" step="500" value="5000"></div>
+  <p class="note" style="margin-top: -6px; margin-bottom: 16px;">Disclaimer: this is an AI-generated recommendation, not a final decision-maker. Treat it as a starting point for planning and validation, not a solution to adopt without review.</p>
+  <div class="card">
+    <label for="bud">Monthly budget</label>
+    <div class="budget-box"><span>$</span><input type="text" id="bud" inputmode="numeric" value="5000" aria-label="Monthly budget in dollars"></div>
+    <div style="margin-top: 10px; color: var(--mute); font-size: 14px">Projected spend: <b id="bv">$5,000</b></div>
+  </div>
   <div class="card" id="plan"></div>
   <div class="btns"><button class="btn" id="exp">Export report</button><button class="btn alt" data-go="0">Start a new analysis</button></div>
 </section>
@@ -981,7 +1036,37 @@ var FIX=[
 [["Reduce packaging","Packaging waste is the lowest topic at 35%. Switch to recyclable materials and add a box return program.",1],["Add a smaller, cheaper plan","Price is at 41%, and reviews say it feels pricey for four. Offer a two-person plan and family discounts.",1],["Feature kid-approved meals","Kid approval is at 61%. Highlight top-rated kid meals and let parents filter for picky eaters.",0]],
 [["Cut down on notifications","Notifications score 29% positive. Add quiet hours and let students choose which reminders they get.",1],["Make free vs. paid clearer","Price sits at 47%. Show exactly what is free, what is paid, and add a student discount.",0],["Share study results","Study results are at 69%. Show average grade gains to turn good experiences into proof.",0]]
 ];
+var SENTIMENT_BANK=[
+[[{phrase:"fits in my pack",focus:"Own the portability story",detail:"Frame the carry case and compact footprint as the main reason buyers choose it on trips."},{phrase:"worth the price",focus:"Cut the objection on cost",detail:"Use a bundle or starter kit in ads so the purchase feels easier to justify."},{phrase:"cleanup is annoying",focus:"Fix the weak point early",detail:"Show a rinse-free filter or quick-clean cup as a visible product win in the first 5 seconds."},{phrase:"great gift",focus:"Tap gift and impulse intent",detail:"Position the product as an easy premium gift for outdoorsy friends or new campers."},{phrase:"reliable in the backcountry",focus:"Translate user trust into payoff",detail:"Highlight a durable build and real-world test footage to turn trust into conversions."}],
+[{phrase:"battery lasts all week",focus:"Lead with the headline value",detail:"Use the week-long battery promise as the hero claim in top-of-funnel creative."},{phrase:"got me walking more",focus:"Make the habit payoff visible",detail:"Show the daily step streak and movement improvement in a relatable, health-focused story."},{phrase:"app is clunky",focus:"Simplify the user journey",detail:"Promote cleaner onboarding and a more obvious home screen to reduce the friction people complain about."},{phrase:"strap irritates my wrist",focus:"Offer a comfort upgrade",detail:"Feature a softer strap and simple sizing guidance to reduce friction at checkout."},{phrase:"feels accurate enough",focus:"Back claims with proof",detail:"Surface benchmark comparisons and a confidence cue to reinforce the product’s credibility."}],
+[{phrase:"dinner in 20 minutes",focus:"Sell the time-saving win",detail:"Center the ad around the minutes saved and the family chaos avoided each evening."},{phrase:"my kids ate it",focus:"Lean into approval proof",detail:"Use real kid-reviewed meals, not just ingredient lists, to validate the product in the ad."},{phrase:"too much packaging",focus:"Solve the waste objection",detail:"Offer a refill or returnable packaging story to make the product feel more responsible."},{phrase:"pricey for four",focus:"Make the value easier to see",detail:"A smaller plan or family bundle makes the spend feel more intentional and manageable."},{phrase:"easy to prep",focus:"Show the convenience in motion",detail:"Put a short recipe-first story in the creative so parents quickly see the routine change."}],
+[{phrase:"saved my midterm",focus:"Lead with performance proof",detail:"Use grade gains or exam prep wins as the clearest trust signal for students."},{phrase:"better than flashcards",focus:"Show the difference in use",detail:"Highlight a faster review loop and better retention to move students past the generic study-app pitch."},{phrase:"too many reminders",focus:"Respect student focus",detail:"Offer quiet hours and customizable reminders to make the app feel less intrusive."},{phrase:"worth the subscription",focus:"Make the value obvious",detail:"Show what is included at each price point to reduce purchase hesitation."},{phrase:"helps me stay on track",focus:"Match the routine",detail:"Position the app as a lifestyle aid that fits study sessions without feeling heavy-handed."}]],
+[[{phrase:"fits in my pack",focus:"Lead with portability",detail:"Show the carry case and quick pack-out in the first frame to connect with active buyers."},{phrase:"worth the price",focus:"Use perceived value",detail:"Pair a price claim with a clarified bundle to improve the buying decision."},{phrase:"cleanup is annoying",focus:"Offer a friction fix",detail:"Highlight the one-step rinse or removable cup as a direct response to the pain point."},{phrase:"great gift",focus:"Make gifting feel easy",detail:"Position the product as a thoughtful outdoors gift that feels premium and practical."},{phrase:"durable enough for trail use",focus:"Build confidence",detail:"Use sturdier build cues and real-world proof to reassure buyers who are risk-averse."}],
+[{phrase:"battery lasts all week",focus:"Make the promise visible",detail:"Use a clear battery claim and a week-long activity shot to convey lasting value."},{phrase:"got me walking more",focus:"Sell the habit impact",detail:"Translate steps into a story about feeling more active during a busy workday."},{phrase:"app is clunky",focus:"Reduce the software pain",detail:"Stress a cleaner dashboard and one-tap metrics screen in campaign language."},{phrase:"strap irritates my wrist",focus:"Address comfort friction",detail:"Position a softer strap as a comfort-first upgrade that reduces buyer hesitation."},{phrase:"reads near my watch",focus:"Lead with accuracy proof",detail:"Use trusted comparison benchmarks to make the product feel more dependable."}],
+[{phrase:"dinner in 20 minutes",focus:"Sell the time crunch relief",detail:"Tell the story of a realistic weeknight rescue with quick prep and clean ingredients."},{phrase:"my kids ate it",focus:"Build trust with parents",detail:"Use family-safe, kid-approved meals to reduce the fear of making the wrong choice."},{phrase:"too much packaging",focus:"Tone down the waste concern",detail:"Reframe the product around recyclability and a refill-friendly approach for busy families."},{phrase:"pricey for four",focus:"Show a lower-commitment option",detail:"Introduce a smaller plan or two-person split in the ad so the spend feels flexible."},{phrase:"easy to plan around",focus:"Frame the routine win",detail:"Highlight convenience and a repeatable family meal rhythm, not just ingredients."}],
+[{phrase:"saved my midterm",focus:"Use social proof",detail:"Feature student success stories to make the product seem like a practical study assistant."},{phrase:"better than flashcards",focus:"Show the experience gap",detail:"Message the faster, more engaging study flow that feels more natural in real routines."},{phrase:"too many reminders",focus:"Reduce stress in the UX",detail:"Target quiet hours and a better balance of prompts to avoid annoying the user."},{phrase:"worth the subscription",focus:"Sell the value clearly",detail:"Show what students get without extra costs so the product feels more transparent."},{phrase:"helps me stay on track",focus:"Leverage habit momentum",detail:"Position it as a routine builder that can keep students on pace without feeling overwhelming."}]]
+];
 var cur=0,sel=0,timer=null,W=40,B=5000,running=false;
+
+function shuffle(arr){
+  var copy=arr.slice();
+  for(var i=copy.length-1;i>0;i--){
+    var j=Math.floor(Math.random()*(i+1));
+    var t=copy[i];copy[i]=copy[j];copy[j]=t;
+  }
+  return copy;
+}
+function getRandomSentimentSet(index){
+  var pool = SENTIMENT_BANK[index] ? SENTIMENT_BANK[index].flat() : [];
+  if(!pool.length){
+    return {phrases:[], fixes:[]};
+  }
+  var picks = shuffle(pool).slice(0,4);
+  return {
+    phrases: picks.map(function(item){return item.phrase}),
+    fixes: picks.slice(0,3).map(function(item){return {headline:item.focus,detail:item.detail}})
+  };
+}
 var $=function(i){return document.getElementById(i)};
 var nav=$("nav");
 steps.forEach(function(s,i){var b=document.createElement("button");b.innerHTML=ico(NI[i])+"<span>"+s+"</span>";b.onclick=function(){go(i)};nav.appendChild(b)});
@@ -1027,10 +1112,11 @@ function startProg(){
 }
 function renderSent(){
   var p=sc.sent;
+  var sentState=getRandomSentimentSet(SCN.indexOf(sc));
   $("stack").innerHTML='<div style="width:0;background:var(--pos)" data-w="'+p[0]+'%">'+p[0]+'% positive</div><div style="width:0;background:var(--neu)" data-w="'+p[1]+'%">'+p[1]+'%</div><div style="width:0;background:var(--neg)" data-w="'+p[2]+'%">'+p[2]+'%</div>';
   $("cnt")._cur=0;tween($("cnt"),liveTotal||sc.cnt,1200,function(v){return Math.round(v).toLocaleString()});
-  $("fixes").innerHTML=FIX[SCN.indexOf(sc)].map(function(f){return '<div class="fix"><div class="ic">'+ico("bulb")+'</div><div><b>'+f[0]+'<span class="tg'+(f[2]?"":" md")+'">'+(f[2]?"High impact":"Medium impact")+'</span></b><p>'+f[1]+'</p></div></div>'}).join("");
-  $("chips").innerHTML=sc.chips.map(function(c){return '<span class="chip">“'+c+'”</span>'}).join("");
+  $("fixes").innerHTML=sentState.fixes.map(function(f){return '<div class="fix"><div class="ic">'+ico("bulb")+'</div><div><b>'+f.headline+'<span class="tg md">Priority</span></b><p>'+f.detail+'</p></div></div>'}).join("");
+  $("chips").innerHTML=sentState.phrases.map(function(c){return '<span class="chip">“'+c+'”</span>'}).join("");
   $("topics").innerHTML=topics.map(function(t){var c=t[1]>=65?"var(--pos)":t[1]>=45?"var(--neu)":"var(--neg)";return '<div class="bar"><span>'+t[0]+'</span><div class="t"><i style="width:0;background:'+c+'" data-w="'+t[1]+'%"></i></div><em>'+t[1]+'%</em></div>'}).join("");
   grow($("s2"));
 }
@@ -1069,14 +1155,29 @@ function renderRank(enter){
 $("w").oninput=function(){W=+this.value;renderRank()};
 function renderDetail(){
   if(!picked)sel=ranked()[0].i;
-  var s=sites[sel];$("dn").textContent=s.n;$("dt").textContent=s.t+" · Why this site fits "+($("pname").value||"your product");
+  var s=sites[sel];
+  var fitText = s.t + " is a strong fit for "+($("pname").value||"your product")+" because it combines "+(s.match>=80?"high intent and strong audience overlap":"steady discovery and a good match")+" with a "+s.pos+"% positive conversation rate.";
+  var extraPoints = [
+    "Audience signal: "+s.age[0]+"% of this audience is in the highest-fit age band, which keeps the product message relevant.",
+    "Buying moment: the placement is strongest when ads show the product in context, not as a generic claim, so the creative can tie to real use cases.",
+    "Competitive edge: this venue is already seeing stronger positive sentiment than the category average, which gives your campaign a better starting point."
+  ];
+  $("dn").textContent=s.n;$("dt").textContent=s.t+" · Why this site fits "+($("pname").value||"your product");
   $("dsc")._cur=0;tween($("dsc"),score(s),900);
   $("dm").innerHTML='<span>Reach '+s.reach+'</span><span>Positive '+s.pos+'%</span><span>$'+s.cpm+' per 1,000</span>';
   $("ages").innerHTML=s.age.map(function(a,i){return '<div class="bar" style="grid-template-columns:60px 1fr 40px"><span>'+AGES[i]+'</span><div class="t"><i style="width:0;background:var(--acc)" data-w="'+a*2+'%"></i></div><em>'+a+'%</em></div>'}).join("");
-  $("why").textContent=s.why;$("sty").textContent=s.sty;
+  $("why").textContent=fitText;
+  $("detailBullets").innerHTML=extraPoints.map(function(point){return '<li>'+point+'</li>'}).join("");
+  $("sty").textContent=s.sty + " For this placement, lead with a real-use story that feels native to the audience rather than a polished sales pitch.";
   var fl=$("dfill");fl.style.transition="none";fl.style.width="0";fl.offsetWidth;fl.style.transition="";
   requestAnimationFrame(function(){fl.style.width=score(s)+"%"});
   grow($("ages"));
+}
+function parseBudget(raw){
+  var digits=String(raw).replace(/[^\d]/g,"");
+  if(!digits){return 1000;}
+  var n=Number(digits);
+  return Math.min(20000,Math.max(1000,n));
 }
 function renderPlan(){
   var top=ranked().slice(0,3),tot=top.reduce(function(a,r){return a+r.sc},0);
@@ -1084,11 +1185,16 @@ function renderPlan(){
   $("plan").innerHTML=top.map(function(r){var amt=Math.round(B*r.sc/tot/50)*50,imp=Math.round(amt/r.s.cpm*1000);
     return '<div class="src"><b>'+r.s.n+'</b><span>'+imp.toLocaleString()+' views</span><b style="flex:none">$'+amt.toLocaleString()+'</b></div>'}).join("");
 }
-$("bud").oninput=function(){B=+this.value;renderPlan()};
+$("bud").oninput=function(){
+  B=parseBudget(this.value);
+  this.value=B.toLocaleString();
+  $("bv").textContent="$"+B.toLocaleString();
+  renderPlan();
+};
 function toast(m){var t=$("toast");t.textContent=m;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},2400)}
 function buildReport(){
   var R=ranked(),top=R.slice(0,3),tot=top.reduce(function(a,r){return a+r.sc},0);
-  var s=sites[picked?sel:R[0].i],feed=feedNow||sc.feed,total=liveTotal||sc.cnt,p=sc.sent,fx=FIX[SCN.indexOf(sc)];
+  var s=sites[picked?sel:R[0].i],feed=feedNow||sc.feed,total=liveTotal||sc.cnt,p=sc.sent,fx=getRandomSentimentSet(SCN.indexOf(sc)).fixes;
   var wl=W<35?"leaning toward positive buzz":W>65?"leaning toward audience size":"balanced between buzz and audience size";
   var rows=function(arr){return arr.map(function(a){return '<tr><td>'+a.join('</td><td>')+'</td></tr>'}).join("")};
   var bar=function(v,c){return '<div style="min-width:160px"><div class="bar"><i style="width:'+v+'%;background:'+c+'"></i></div></div>'};
@@ -1100,12 +1206,13 @@ function buildReport(){
   h+='<div class="sec"><h2>1. Product</h2><table>'+rows([["<b>Product</b>",sc.name],["<b>Category</b>",sc.cat],["<b>Price</b>",sc.price],["<b>Customer’s job</b>",sc.job],["<b>Customer age range</b>",sc.a[0]+" to "+sc.a[1]]])+'</table></div><hr>';
   h+='<div class="sec"><h2>2. Data feed</h2><p class="meta">Public posts, reviews, and coverage collected automatically.</p><table><tr><th>Source</th><th>What we read</th><th>Mentions</th></tr>'+rows(FN.map(function(f,i){return [f[0],f[1],feed[i].toLocaleString()]}))+'<tr><td><b>Total</b></td><td></td><td><b>'+total.toLocaleString()+'</b></td></tr></table></div><hr>';
   h+='<div class="sec"><h2>3. Sentiment</h2><div class="stack"><span style="width:'+p[0]+'%;background:#A3BE8C">'+p[0]+'% positive</span><span style="width:'+p[1]+'%;background:#81A1C1">'+p[1]+'%</span><span style="width:'+p[2]+'%;background:#BF616A">'+p[2]+'%</span></div><p class="meta">Positive, neutral, and negative, across '+total.toLocaleString()+' mentions.</p>';
+  h+='<p class="meta">Disclaimer: this sentiment analysis is AI-assisted and sensitive or identifying information was filtered out of the public data stream and excluded from the model’s interpretation.</p>';
   h+='<h3>What drives the opinion</h3><table>'+rows(topics.map(function(t){return [t[0],bar(t[1],col(t[1])),t[1]+'%']}))+'</table>';
-  h+='<h3>Phrases showing up most</h3><p>'+sc.chips.map(function(c){return '“'+c+'”'}).join(", ")+'</p>';
-  h+='<h3>Suggested improvements</h3><ol>'+fx.map(function(f){return '<li><b>'+f[0]+'</b> ('+(f[2]?"high":"medium")+' impact). '+f[1]+'</li>'}).join("")+'</ol></div><hr>';
+  h+='<h3>Phrases showing up most</h3><p>'+getRandomSentimentSet(SCN.indexOf(sc)).phrases.map(function(c){return '“'+c+'”'}).join(", ")+'</p>';
+  h+='<h3>Suggested improvements</h3><ol>'+fx.map(function(f){return '<li><b>'+f.headline+'</b>. '+f.detail+'</li>'}).join("")+'</ol></div><hr>';
   h+='<div class="sec"><h2>4. Ad placement rankings</h2><p class="meta">Scores are '+wl+'.</p><table><tr><th>Rank</th><th>Site</th><th>Type</th><th>Reach</th><th>Positive</th><th>Per 1,000</th><th>Score</th></tr>'+rows(R.map(function(r,k){return [k+1,r.s.n,r.s.t,r.s.reach,r.s.pos+'%','$'+r.s.cpm,'<b>'+r.sc+'</b>']}))+'</table></div><hr>';
   h+='<div class="sec"><h2>5. Site detail: '+s.n+'</h2><p class="meta">'+s.t+'. Match score '+score(s)+' out of 100.</p><p><b>Why it ranked here.</b> '+s.why+'</p><p><b>Suggested ad style.</b> '+s.sty+'</p><h3>Audience by age</h3><table>'+rows(s.age.map(function(a,i){return [AGES[i],bar(a*2,"#5E81AC"),a+'%']}))+'</table></div><hr>';
-  h+='<div class="sec"><h2>6. Campaign plan</h2><p class="meta">Monthly budget of $'+B.toLocaleString()+', split across the top three sites.</p><table><tr><th>Site</th><th>Spend</th><th>Estimated views</th></tr>'+rows(top.map(function(r){var amt=Math.round(B*r.sc/tot/50)*50;return [r.s.n,'$'+amt.toLocaleString(),Math.round(amt/r.s.cpm*1000).toLocaleString()]}))+'</table></div><hr>';
+  h+='<div class="sec"><h2>6. Campaign plan</h2><p class="meta">Monthly budget of $'+B.toLocaleString()+', split across the top three sites.</p><p class="meta">Disclaimer: this is an AI-generated recommendation, not a final decision-maker. Treat it as a starting point for planning and validation, not as a solution to adopt without review.</p><table><tr><th>Site</th><th>Spend</th><th>Estimated views</th></tr>'+rows(top.map(function(r){var amt=Math.round(B*r.sc/tot/50)*50;return [r.s.n,'$'+amt.toLocaleString(),Math.round(amt/r.s.cpm*1000).toLocaleString()]}))+'</table></div><hr>';
   h+='<p class="meta">All figures are sample data from the Resonate mockup.</p></div></body></html>';
   return h;
 }
